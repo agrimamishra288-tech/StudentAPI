@@ -54,7 +54,7 @@ npm start
 ```
 
 Server: [http://localhost:3000](http://localhost:3000)<br>
-Root route: `GET /` returns `Student Management REST API is Running`
+Root route: `GET /` returns `Student Management API is running. Try GET /students.`
 
 To reset the register, stop and restart the server. The three seed students come back.
 
@@ -97,7 +97,7 @@ Success with one student:
 
 ```json
 {
-  "message": "Student added successfully",
+  "message": "Student record created.",
   "student": {
     "id": 4,
     "name": "Nisha Verma",
@@ -112,7 +112,7 @@ Success with a list:
 
 ```json
 {
-  "message": "All students fetched successfully",
+  "message": "Student records retrieved.",
   "students": []
 }
 ```
@@ -121,7 +121,7 @@ Failure:
 
 ```json
 {
-  "message": "Student not found"
+  "message": "No student exists with that id."
 }
 ```
 
@@ -133,7 +133,7 @@ Failure:
 
 ```json
 {
-  "message": "All students fetched successfully",
+  "message": "Student records retrieved.",
   "students": [
     {
       "id": 1,
@@ -178,7 +178,7 @@ Content-Type: application/json
 
 ```json
 {
-  "message": "Student added successfully",
+  "message": "Student record created.",
   "student": {
     "id": 4,
     "name": "Nisha Verma",
@@ -193,7 +193,7 @@ Content-Type: application/json
 
 ```json
 {
-  "message": "Please provide valid name, age, course and email"
+  "message": "Provide a name, age, course and email. Age must be a positive whole number."
 }
 ```
 
@@ -201,7 +201,7 @@ Content-Type: application/json
 
 ```json
 {
-  "message": "Student found successfully",
+  "message": "Student record retrieved.",
   "student": {
     "id": 1,
     "name": "Aarav Mehta",
@@ -216,7 +216,7 @@ Content-Type: application/json
 
 ```json
 {
-  "message": "Student updated successfully",
+  "message": "Student record updated.",
   "student": {
     "id": 4,
     "name": "Nisha Verma",
@@ -231,7 +231,7 @@ Content-Type: application/json
 
 ```json
 {
-  "message": "Student deleted successfully",
+  "message": "Student record deleted.",
   "student": {
     "id": 4,
     "name": "Nisha Verma",
@@ -246,7 +246,7 @@ Content-Type: application/json
 
 ```json
 {
-  "message": "Student not found"
+  "message": "No student exists with that id."
 }
 ```
 
@@ -254,11 +254,11 @@ Content-Type: application/json
 
 ```json
 {
-  "message": "Invalid student id"
+  "message": "Student id must be a positive whole number."
 }
 ```
 
-Malformed JSON is caught by the central error handler and returned as `400 Invalid JSON body` instead of crashing the server. Unknown routes return `404 Route not found`.
+Malformed JSON is caught by the central error handler and returned as `400 Request body is not valid JSON.` instead of crashing the server. Unknown routes return `404 That endpoint does not exist.`
 
 ---
 
@@ -316,19 +316,19 @@ Checked by hand with `curl`:
 
 | Check | Result |
 | --- | --- |
-| `GET /` | `200 Student Management REST API is Running` |
+| `GET /` | `200 Student Management API is running. Try GET /students.` |
 | `GET /students` | `200`, returns 3 records |
 | `GET /students/1` | `200` |
-| `GET /students/abc` | `400 Invalid student id` |
-| `GET /students/9999` | `404 Student not found` |
+| `GET /students/abc` | `400 Student id must be a positive whole number.` |
+| `GET /students/9999` | `404 No student exists with that id.` |
 | `POST /students` valid body | `201`, new id assigned |
 | `POST /students` empty body | `400` |
 | `PUT /students/4` valid body | `200`, same id, updated fields |
 | `PUT /students/9999` | `404` |
 | `DELETE /students/4` | `200`, record returned |
 | `DELETE /students/4` again | `404` |
-| Malformed JSON body | `400 Invalid JSON body` |
-| Unknown route | `404 Route not found` |
+| Malformed JSON body | `400 Request body is not valid JSON.` |
+| Unknown route | `404 That endpoint does not exist.` |
 
 ---
 

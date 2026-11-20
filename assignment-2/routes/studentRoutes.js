@@ -30,7 +30,7 @@ const isValidStudent = (payload) => {
 // GET /students
 router.get("/", (req, res) => {
   res.status(200).json({
-    message: "All students fetched successfully",
+    message: "Student records retrieved.",
     students: students
   });
 });
@@ -38,13 +38,13 @@ router.get("/", (req, res) => {
 // GET /students/:id
 router.get("/:id", (req, res) => {
   const id = parseId(req.params.id);
-  if (id === null) return fail(res, 400, "Invalid student id");
+  if (id === null) return fail(res, 400, "Student id must be a positive whole number.");
 
   const student = students.find((entry) => entry.id === id);
-  if (!student) return fail(res, 404, "Student not found");
+  if (!student) return fail(res, 404, "No student exists with that id.");
 
   res.status(200).json({
-    message: "Student found successfully",
+    message: "Student record retrieved.",
     student: student
   });
 });
@@ -52,7 +52,7 @@ router.get("/:id", (req, res) => {
 // POST /students
 router.post("/", (req, res) => {
   if (!isValidStudent(req.body)) {
-    return fail(res, 400, "Please provide valid name, age, course and email");
+    return fail(res, 400, "Provide a name, age, course and email. Age must be a positive whole number.");
   }
 
   const { name, age, course, email } = req.body;
@@ -61,7 +61,7 @@ router.post("/", (req, res) => {
   students.push(student);
 
   res.status(201).json({
-    message: "Student added successfully",
+    message: "Student record created.",
     student: student
   });
 });
@@ -69,13 +69,13 @@ router.post("/", (req, res) => {
 // PUT /students/:id
 router.put("/:id", (req, res) => {
   const id = parseId(req.params.id);
-  if (id === null) return fail(res, 400, "Invalid student id");
+  if (id === null) return fail(res, 400, "Student id must be a positive whole number.");
 
   const student = students.find((entry) => entry.id === id);
-  if (!student) return fail(res, 404, "Student not found");
+  if (!student) return fail(res, 404, "No student exists with that id.");
 
   if (!isValidStudent(req.body)) {
-    return fail(res, 400, "Please provide valid name, age, course and email");
+    return fail(res, 400, "Provide a name, age, course and email. Age must be a positive whole number.");
   }
 
   const { name, age, course, email } = req.body;
@@ -85,7 +85,7 @@ router.put("/:id", (req, res) => {
   student.email = email;
 
   res.status(200).json({
-    message: "Student updated successfully",
+    message: "Student record updated.",
     student: student
   });
 });
@@ -93,15 +93,15 @@ router.put("/:id", (req, res) => {
 // DELETE /students/:id
 router.delete("/:id", (req, res) => {
   const id = parseId(req.params.id);
-  if (id === null) return fail(res, 400, "Invalid student id");
+  if (id === null) return fail(res, 400, "Student id must be a positive whole number.");
 
   const index = students.findIndex((entry) => entry.id === id);
-  if (index === -1) return fail(res, 404, "Student not found");
+  if (index === -1) return fail(res, 404, "No student exists with that id.");
 
   const [removed] = students.splice(index, 1);
 
   res.status(200).json({
-    message: "Student deleted successfully",
+    message: "Student record deleted.",
     student: removed
   });
 });

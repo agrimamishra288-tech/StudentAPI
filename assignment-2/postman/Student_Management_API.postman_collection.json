@@ -20,7 +20,7 @@
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
                   "pm.test('Returns the expected message', () => {",
-                  "  pm.expect(body.message).to.eql('All students fetched successfully');",
+                  "  pm.expect(body.message).to.eql('Student records retrieved.');",
                   "});",
                   "pm.test('Students is a non-empty array', () => {",
                   "  pm.expect(body.students).to.be.an('array');",
@@ -58,7 +58,7 @@
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
                   "pm.test('Returns student 1', () => {",
-                  "  pm.expect(body.message).to.eql('Student found successfully');",
+                  "  pm.expect(body.message).to.eql('Student record retrieved.');",
                   "  pm.expect(body.student.id).to.eql(1);",
                   "});"
                 ]
@@ -98,7 +98,7 @@
                   "pm.test('Status is 201 Created', () => pm.response.to.have.status(201));",
                   "const body = pm.response.json();",
                   "pm.test('A new id was assigned', () => {",
-                  "  pm.expect(body.message).to.eql('Student added successfully');",
+                  "  pm.expect(body.message).to.eql('Student record created.');",
                   "  pm.expect(body.student.id).to.be.a('number');",
                   "});",
                   "pm.test('Fields were saved as sent', () => {",
@@ -178,7 +178,7 @@
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
                   "pm.test('The record was updated', () => {",
-                  "  pm.expect(body.message).to.eql('Student updated successfully');",
+                  "  pm.expect(body.message).to.eql('Student record updated.');",
                   "  pm.expect(body.student.name).to.eql('Postman Demo (edited)');",
                   "  pm.expect(body.student.course).to.eql('BCA');",
                   "  pm.expect(body.student.age).to.eql(21);",
@@ -227,7 +227,7 @@
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
                   "pm.test('The deleted record is returned', () => {",
-                  "  pm.expect(body.message).to.eql('Student deleted successfully');",
+                  "  pm.expect(body.message).to.eql('Student record deleted.');",
                   "  pm.expect(String(body.student.id)).to.eql(String(pm.collectionVariables.get('createdStudentId')));",
                   "});",
                   "pm.collectionVariables.set('createdStudentId', '');"
@@ -253,7 +253,7 @@
       "name": "Error handling",
       "item": [
         {
-          "name": "400 - Invalid student id",
+          "name": "400 - Invalid id format",
           "event": [
             {
               "listen": "test",
@@ -262,7 +262,7 @@
                 "exec": [
                   "pm.test('Status is 400 Bad Request', () => pm.response.to.have.status(400));",
                   "pm.test('Explains the bad id', () => {",
-                  "  pm.expect(pm.response.json().message).to.eql('Invalid student id');",
+                  "  pm.expect(pm.response.json().message).to.eql('Student id must be a positive whole number.');",
                   "});"
                 ]
               }
@@ -290,7 +290,7 @@
                 "exec": [
                   "pm.test('Status is 400 Bad Request', () => pm.response.to.have.status(400));",
                   "pm.test('Returns the validation message', () => {",
-                  "  pm.expect(pm.response.json().message).to.eql('Please provide valid name, age, course and email');",
+                  "  pm.expect(pm.response.json().message).to.eql('Provide a name, age, course and email. Age must be a positive whole number.');",
                   "});"
                 ]
               }
@@ -332,7 +332,7 @@
                 "exec": [
                   "pm.test('Status is 400 Bad Request', () => pm.response.to.have.status(400));",
                   "pm.test('Reports invalid JSON', () => {",
-                  "  pm.expect(pm.response.json().message).to.eql('Invalid JSON body');",
+                  "  pm.expect(pm.response.json().message).to.eql('Request body is not valid JSON.');",
                   "});"
                 ]
               }
@@ -365,7 +365,7 @@
           "response": []
         },
         {
-          "name": "404 - Student not found",
+          "name": "404 - Missing student",
           "event": [
             {
               "listen": "test",
@@ -374,7 +374,7 @@
                 "exec": [
                   "pm.test('Status is 404 Not Found', () => pm.response.to.have.status(404));",
                   "pm.test('Reports the missing student', () => {",
-                  "  pm.expect(pm.response.json().message).to.eql('Student not found');",
+                  "  pm.expect(pm.response.json().message).to.eql('No student exists with that id.');",
                   "});"
                 ]
               }
@@ -402,7 +402,7 @@
                 "exec": [
                   "pm.test('Status is 404 Not Found', () => pm.response.to.have.status(404));",
                   "pm.test('Reports a route problem', () => {",
-                  "  pm.expect(pm.response.json().message).to.eql('Route not found');",
+                  "  pm.expect(pm.response.json().message).to.eql('That endpoint does not exist.');",
                   "});"
                 ]
               }

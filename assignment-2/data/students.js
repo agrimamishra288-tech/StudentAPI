@@ -4,39 +4,25 @@
 
 const students = [
   {
-    id: 101,
+    id: 1,
     name: "Aarav Mehta",
-    email: "aarav.mehta@example.com",
+    age: 20,
     course: "B.Tech CSE",
-    year: 2
+    email: "aarav.mehta@example.com"
   },
   {
-    id: 102,
+    id: 2,
     name: "Ishita Rao",
-    email: "ishita.rao@example.com",
+    age: 21,
     course: "B.Tech IT",
-    year: 3
+    email: "ishita.rao@example.com"
   },
   {
-    id: 103,
+    id: 3,
     name: "Kabir Nair",
-    email: "kabir.nair@example.com",
+    age: 19,
     course: "BCA",
-    year: 1
-  },
-  {
-    id: 104,
-    name: "Meera Joshi",
-    email: "meera.joshi@example.com",
-    course: "B.Sc Data Science",
-    year: 2
-  },
-  {
-    id: 105,
-    name: "Rohan Kapoor",
-    email: "rohan.kapoor@example.com",
-    course: "BBA",
-    year: 4
+    email: "kabir.nair@example.com"
   }
 ];
 

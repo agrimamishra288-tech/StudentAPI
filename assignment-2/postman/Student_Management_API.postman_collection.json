@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "b7a1c0e2-4d3f-4a8e-9b6c-2f1d8a3e5c74",
     "name": "Student Management REST API - Lab 2",
-    "description": "Lab Assignment 2 - Web Dev III, Unit 2.\n\nRun the \"CRUD - run in order\" folder top to bottom. The create request stores the new id in a collection variable so the read, update and delete requests use the same record. The \"Error handling\" folder checks every 400 and 404 case.\n\nBase URL: http://localhost:3000\nNo database is used; restarting the server restores the five seed students.",
+    "description": "Lab Assignment 2 - Web Dev III, Unit 2.\n\nRun the \"CRUD - run in order\" folder top to bottom. The create request stores the new id in a collection variable so the read, update and delete requests use the same record. The \"Error handling\" folder checks every 400 and 404 case.\n\nBase URL: http://localhost:3000\nNo database is used; restarting the server restores the three seed students.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -19,14 +19,16 @@
                 "exec": [
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
-                  "pm.test('Success flag is true', () => pm.expect(body.success).to.eql(true));",
-                  "pm.test('Data is a non-empty array', () => {",
-                  "  pm.expect(body.data).to.be.an('array');",
-                  "  pm.expect(body.data.length).to.be.above(0);",
+                  "pm.test('Returns the expected message', () => {",
+                  "  pm.expect(body.message).to.eql('All students fetched successfully');",
+                  "});",
+                  "pm.test('Students is a non-empty array', () => {",
+                  "  pm.expect(body.students).to.be.an('array');",
+                  "  pm.expect(body.students.length).to.be.above(0);",
                   "});",
                   "pm.test('Every record has the expected fields', () => {",
-                  "  body.data.forEach((student) => {",
-                  "    pm.expect(student).to.have.all.keys('id', 'name', 'email', 'course', 'year');",
+                  "  body.students.forEach((student) => {",
+                  "    pm.expect(student).to.have.all.keys('id', 'name', 'age', 'course', 'email');",
                   "  });",
                   "});"
                 ]
@@ -55,9 +57,9 @@
                 "exec": [
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
-                  "pm.test('Returns student 101', () => {",
-                  "  pm.expect(body.success).to.eql(true);",
-                  "  pm.expect(body.data.id).to.eql(101);",
+                  "pm.test('Returns student 1', () => {",
+                  "  pm.expect(body.message).to.eql('Student found successfully');",
+                  "  pm.expect(body.student.id).to.eql(1);",
                   "});"
                 ]
               }
@@ -67,9 +69,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/students/101",
+              "raw": "{{baseUrl}}/students/1",
               "host": ["{{baseUrl}}"],
-              "path": ["students", "101"]
+              "path": ["students", "1"]
             },
             "description": "Reads a single seeded student by id."
           },
@@ -96,15 +98,15 @@
                   "pm.test('Status is 201 Created', () => pm.response.to.have.status(201));",
                   "const body = pm.response.json();",
                   "pm.test('A new id was assigned', () => {",
-                  "  pm.expect(body.success).to.eql(true);",
-                  "  pm.expect(body.data.id).to.be.a('number');",
+                  "  pm.expect(body.message).to.eql('Student added successfully');",
+                  "  pm.expect(body.student.id).to.be.a('number');",
                   "});",
                   "pm.test('Fields were saved as sent', () => {",
-                  "  pm.expect(body.data.name).to.eql('Postman Demo');",
-                  "  pm.expect(body.data.course).to.eql('B.Tech CSE');",
-                  "  pm.expect(body.data.year).to.eql(2);",
+                  "  pm.expect(body.student.name).to.eql('Postman Demo');",
+                  "  pm.expect(body.student.course).to.eql('B.Tech CSE');",
+                  "  pm.expect(body.student.age).to.eql(20);",
                   "});",
-                  "pm.collectionVariables.set('createdStudentId', body.data.id);"
+                  "pm.collectionVariables.set('createdStudentId', body.student.id);"
                 ]
               }
             }
@@ -119,7 +121,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Postman Demo\",\n  \"email\": \"{{demoEmail}}\",\n  \"course\": \"B.Tech CSE\",\n  \"year\": 2\n}",
+              "raw": "{\n  \"name\": \"Postman Demo\",\n  \"age\": 20,\n  \"course\": \"B.Tech CSE\",\n  \"email\": \"{{demoEmail}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -146,8 +148,8 @@
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
                   "pm.test('Returns the record created in request 03', () => {",
-                  "  pm.expect(String(body.data.id)).to.eql(String(pm.collectionVariables.get('createdStudentId')));",
-                  "  pm.expect(body.data.name).to.eql('Postman Demo');",
+                  "  pm.expect(String(body.student.id)).to.eql(String(pm.collectionVariables.get('createdStudentId')));",
+                  "  pm.expect(body.student.name).to.eql('Postman Demo');",
                   "});"
                 ]
               }
@@ -176,12 +178,13 @@
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
                   "pm.test('The record was updated', () => {",
-                  "  pm.expect(body.data.name).to.eql('Postman Demo (edited)');",
-                  "  pm.expect(body.data.course).to.eql('BCA');",
-                  "  pm.expect(body.data.year).to.eql(3);",
+                  "  pm.expect(body.message).to.eql('Student updated successfully');",
+                  "  pm.expect(body.student.name).to.eql('Postman Demo (edited)');",
+                  "  pm.expect(body.student.course).to.eql('BCA');",
+                  "  pm.expect(body.student.age).to.eql(21);",
                   "});",
                   "pm.test('The id did not change', () => {",
-                  "  pm.expect(String(body.data.id)).to.eql(String(pm.collectionVariables.get('createdStudentId')));",
+                  "  pm.expect(String(body.student.id)).to.eql(String(pm.collectionVariables.get('createdStudentId')));",
                   "});"
                 ]
               }
@@ -197,7 +200,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Postman Demo (edited)\",\n  \"email\": \"{{demoEmail}}\",\n  \"course\": \"BCA\",\n  \"year\": 3\n}",
+              "raw": "{\n  \"name\": \"Postman Demo (edited)\",\n  \"age\": 21,\n  \"course\": \"BCA\",\n  \"email\": \"{{demoEmail}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -224,8 +227,8 @@
                   "pm.test('Status is 200 OK', () => pm.response.to.have.status(200));",
                   "const body = pm.response.json();",
                   "pm.test('The deleted record is returned', () => {",
-                  "  pm.expect(body.message).to.eql('Student deleted');",
-                  "  pm.expect(String(body.data.id)).to.eql(String(pm.collectionVariables.get('createdStudentId')));",
+                  "  pm.expect(body.message).to.eql('Student deleted successfully');",
+                  "  pm.expect(String(body.student.id)).to.eql(String(pm.collectionVariables.get('createdStudentId')));",
                   "});",
                   "pm.collectionVariables.set('createdStudentId', '');"
                 ]
@@ -259,9 +262,7 @@
                 "exec": [
                   "pm.test('Status is 400 Bad Request', () => pm.response.to.have.status(400));",
                   "pm.test('Explains the bad id', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.error).to.eql('Invalid student id');",
-                  "  pm.expect(body.details).to.be.an('array');",
+                  "  pm.expect(pm.response.json().message).to.eql('Invalid student id');",
                   "});"
                 ]
               }
@@ -288,10 +289,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Status is 400 Bad Request', () => pm.response.to.have.status(400));",
-                  "const body = pm.response.json();",
-                  "pm.test('Returns a list of field errors', () => {",
-                  "  pm.expect(body.error).to.eql('Validation failed');",
-                  "  pm.expect(body.details.length).to.be.above(0);",
+                  "pm.test('Returns the validation message', () => {",
+                  "  pm.expect(pm.response.json().message).to.eql('Please provide valid name, age, course and email');",
                   "});"
                 ]
               }
@@ -333,8 +332,7 @@
                 "exec": [
                   "pm.test('Status is 400 Bad Request', () => pm.response.to.have.status(400));",
                   "pm.test('Reports invalid JSON', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.error).to.eql('Invalid JSON body');",
+                  "  pm.expect(pm.response.json().message).to.eql('Invalid JSON body');",
                   "});"
                 ]
               }
@@ -375,9 +373,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Status is 404 Not Found', () => pm.response.to.have.status(404));",
-                  "pm.test('Names the missing id', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.error).to.eql('Student not found');",
+                  "pm.test('Reports the missing student', () => {",
+                  "  pm.expect(pm.response.json().message).to.eql('Student not found');",
                   "});"
                 ]
               }
@@ -405,8 +402,7 @@
                 "exec": [
                   "pm.test('Status is 404 Not Found', () => pm.response.to.have.status(404));",
                   "pm.test('Reports a route problem', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.error).to.eql('Route not found');",
+                  "  pm.expect(pm.response.json().message).to.eql('Route not found');",
                   "});"
                 ]
               }

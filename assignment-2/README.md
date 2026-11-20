@@ -3,9 +3,7 @@
 **Web Dev III / Unit 2 / Lab Assignment 2**<br>
 Node.js + Express.js + Postman · in-class lab · 2.5 marks
 
-A small Express server that keeps a class register in memory and exposes it over five REST endpoints. No database, no Mongoose, no extra libraries — just an array, a router, a custom logger, and proper status codes.
-
-![The Student Management REST API interface](docs/screenshots/ui-home.png)
+A small Express server that keeps a class register in memory and exposes it over five REST endpoints. No database, no Mongoose, no extra libraries — just an array, a router, a custom logger and proper status codes.
 
 ---
 
@@ -16,7 +14,7 @@ A small Express server that keeps a class register in memory and exposes it over
 | Create an Express server | `app.js` |
 | Student CRUD APIs | `routes/studentRoutes.js` |
 | Custom logger middleware | `middleware/logger.js` |
-| Modular routing | `app.js` mounts `/students`, routes live in their own file |
+| Modular routing | `app.js` mounts `/students`; routes live in their own file |
 | Proper error handling | `200`, `201`, `400`, `404`, plus a `500` safety net |
 | Array and JSON data only | `data/students.js` |
 | Test the APIs in Postman | `postman/Student_Management_API.postman_collection.json` |
@@ -36,15 +34,9 @@ assignment-2/
 ├─ middleware/
 │  └─ logger.js            # custom request logger
 ├─ data/
-│  └─ students.js          # five seed records (in-memory array)
-├─ public/                 # optional demo client, no framework
-│  ├─ index.html
-│  ├─ styles.css
-│  └─ ui.js
+│  └─ students.js          # three seed records (in-memory array)
 ├─ postman/
 │  └─ Student_Management_API.postman_collection.json
-├─ docs/
-│  └─ screenshots/
 ├─ package.json
 └─ README.md
 ```
@@ -62,10 +54,9 @@ npm start
 ```
 
 Server: [http://localhost:3000](http://localhost:3000)<br>
-Demo page: [http://localhost:3000](http://localhost:3000)
-`npm run dev` uses Node's built-in `--watch` flag, so no nodemon dependency is needed.
+Root route: `GET /` returns `Student Management REST API is Running`
 
-To reset the register, stop and restart the server. The five seed students come back.
+To reset the register, stop and restart the server. The three seed students come back.
 
 ---
 
@@ -85,29 +76,44 @@ Base URL: `http://localhost:3000`
 
 ```json
 {
-  "id": 101,
+  "id": 1,
   "name": "Aarav Mehta",
-  "email": "aarav.mehta@example.com",
+  "age": 20,
   "course": "B.Tech CSE",
-  "year": 2
+  "email": "aarav.mehta@example.com"
 }
 ```
 
-`POST` and `PUT` require `name`, `email`, `course` and `year`. The `id` is assigned by the server. The four fields are validated:
+`POST` and `PUT` require `name`, `age`, `course` and `email`. The `id` is assigned by the server.
 
-- `name` and `course` cannot be empty or shorter than 2 characters.
-- `email` must look like an email and cannot duplicate another student's email.
-- `year` must be a whole number from 1 to 4.
+Validation rules:
+
+- `name`, `course` and `email` must be non-empty strings.
+- `age` must be a whole number greater than 0.
 
 ### Response shape
 
-Success:
+Success with one student:
 
 ```json
 {
-  "success": true,
-  "message": "Student created",
-  "data": { "id": 106, "name": "Nisha Verma", "email": "nisha@example.com", "course": "B.Tech CSE", "year": 2 }
+  "message": "Student added successfully",
+  "student": {
+    "id": 4,
+    "name": "Nisha Verma",
+    "age": 20,
+    "course": "B.Tech CSE",
+    "email": "nisha.verma@example.com"
+  }
+}
+```
+
+Success with a list:
+
+```json
+{
+  "message": "All students fetched successfully",
+  "students": []
 }
 ```
 
@@ -115,9 +121,7 @@ Failure:
 
 ```json
 {
-  "success": false,
-  "error": "Validation failed",
-  "details": ["name is required.", "year must be a whole number between 1 and 4."]
+  "message": "Student not found"
 }
 ```
 
@@ -129,10 +133,29 @@ Failure:
 
 ```json
 {
-  "success": true,
-  "message": "5 student record(s) found",
-  "data": [
-    { "id": 101, "name": "Aarav Mehta", "email": "aarav.mehta@example.com", "course": "B.Tech CSE", "year": 2 }
+  "message": "All students fetched successfully",
+  "students": [
+    {
+      "id": 1,
+      "name": "Aarav Mehta",
+      "age": 20,
+      "course": "B.Tech CSE",
+      "email": "aarav.mehta@example.com"
+    },
+    {
+      "id": 2,
+      "name": "Ishita Rao",
+      "age": 21,
+      "course": "B.Tech IT",
+      "email": "ishita.rao@example.com"
+    },
+    {
+      "id": 3,
+      "name": "Kabir Nair",
+      "age": 19,
+      "course": "BCA",
+      "email": "kabir.nair@example.com"
+    }
   ]
 }
 ```
@@ -147,66 +170,75 @@ Content-Type: application/json
 ```json
 {
   "name": "Nisha Verma",
-  "email": "nisha.verma@example.com",
+  "age": 20,
   "course": "B.Tech CSE",
-  "year": 2
+  "email": "nisha.verma@example.com"
 }
 ```
 
 ```json
 {
-  "success": true,
-  "message": "Student created",
-  "data": {
-    "id": 106,
+  "message": "Student added successfully",
+  "student": {
+    "id": 4,
     "name": "Nisha Verma",
-    "email": "nisha.verma@example.com",
+    "age": 20,
     "course": "B.Tech CSE",
-    "year": 2
+    "email": "nisha.verma@example.com"
   }
 }
 ```
-
-The response also sets `Location: /students/106`.
 
 ### POST /students → 400
 
 ```json
 {
-  "success": false,
-  "error": "Validation failed",
-  "details": [
-    "name is required.",
-    "email must be a valid email address.",
-    "course is required.",
-    "year must be a whole number between 1 and 4."
-  ]
+  "message": "Please provide valid name, age, course and email"
 }
 ```
 
-### PUT /students/106 → 200
+### GET /students/1 → 200
 
 ```json
 {
-  "success": true,
-  "message": "Student updated",
-  "data": {
-    "id": 106,
-    "name": "Nisha Verma",
-    "email": "nisha.verma@example.com",
-    "course": "BCA",
-    "year": 3
+  "message": "Student found successfully",
+  "student": {
+    "id": 1,
+    "name": "Aarav Mehta",
+    "age": 20,
+    "course": "B.Tech CSE",
+    "email": "aarav.mehta@example.com"
   }
 }
 ```
 
-### DELETE /students/106 → 200
+### PUT /students/4 → 200
 
 ```json
 {
-  "success": true,
-  "message": "Student deleted",
-  "data": { "id": 106, "name": "Nisha Verma", "email": "nisha.verma@example.com", "course": "BCA", "year": 3 }
+  "message": "Student updated successfully",
+  "student": {
+    "id": 4,
+    "name": "Nisha Verma",
+    "age": 21,
+    "course": "BCA",
+    "email": "nisha.verma@example.com"
+  }
+}
+```
+
+### DELETE /students/4 → 200
+
+```json
+{
+  "message": "Student deleted successfully",
+  "student": {
+    "id": 4,
+    "name": "Nisha Verma",
+    "age": 21,
+    "course": "BCA",
+    "email": "nisha.verma@example.com"
+  }
 }
 ```
 
@@ -214,9 +246,7 @@ The response also sets `Location: /students/106`.
 
 ```json
 {
-  "success": false,
-  "error": "Student not found",
-  "details": ["No student exists with id 9999."]
+  "message": "Student not found"
 }
 ```
 
@@ -224,43 +254,42 @@ The response also sets `Location: /students/106`.
 
 ```json
 {
-  "success": false,
-  "error": "Invalid student id",
-  "details": ["Student id must be a positive integer."]
+  "message": "Invalid student id"
 }
 ```
 
-Malformed JSON is caught by the central error handler and returned as a `400 Invalid JSON body` instead of crashing the server. Unknown routes return `404 Route not found`.
+Malformed JSON is caught by the central error handler and returned as `400 Invalid JSON body` instead of crashing the server. Unknown routes return `404 Route not found`.
 
 ---
 
 ## Middleware order
 
 ```js
-app.use(express.static(path.join(__dirname, "public"))); // demo page, not logged
-app.use(logger);                                        // custom logger
-app.use(express.json());                                // JSON body parser
-app.use("/students", studentRoutes);                    // modular router
-app.use((req, res) => { /* 404 */ });                   // unmatched routes
+app.use(logger);                             // custom logger
+app.use(express.json());                     // JSON body parser
+app.get("/", ...);                           // simple home route
+app.use("/students", studentRoutes);         // modular router
+app.use((req, res) => { /* 404 */ });        // unmatched routes
 app.use((err, req, res, next) => { /* 400 for bad JSON, 500 fallback */ });
 ```
 
-The logger prints the method, path, final status, duration, and the body of `POST`/`PUT` requests. Real output from this build:
+The logger prints the method, path, final status, duration, and the body of `POST`/`PUT` requests:
 
 ```text
   STUDENT MANAGEMENT REST API
   Web Dev III - Unit 2 - Lab Assignment 2
   http://localhost:3000
-  5 seed records in memory - no database
+  3 seed records in memory - no database
 
-21:28:12  POST   /students                    400    49.1 ms
-          body {"name":"","email":"","course":"","year":0}
-21:28:13  POST   /students                    201     2.0 ms
-          body {"name":"Nisha Verma","email":"nisha.demo@example.com","course":"B.Tech CSE","year":2}
-21:28:14  GET    /students/102                200     2.3 ms
-21:28:15  PUT    /students/106                200     0.8 ms
-21:28:17  DELETE /students/106                200     0.7 ms
-21:28:18  GET    /students/9999               404     0.9 ms
+23:39:02  GET    /students                    200     2.3 ms
+23:39:07  POST   /students                    400     2.7 ms
+          body {"name":"Test","age":0,"course":"BCA","email":"t@example.com"}
+23:39:07  POST   /students                    201     1.8 ms
+          body {"name":"Nisha Verma","age":20,"course":"B.Tech CSE","email":"nisha.verma@example.com"}
+23:39:10  GET    /students/4                  200     1.2 ms
+23:39:11  PUT    /students/4                  200     2.6 ms
+23:39:11  DELETE /students/4                  200     1.1 ms
+23:39:11  GET    /students/9999               404     0.5 ms
 ```
 
 ---
@@ -279,48 +308,25 @@ The collection contains 11 requests with basic test assertions. The `baseUrl` co
 | CRUD - run in order | get all, get one, create, get created, update, delete | `200`, `200`, `201`, `200`, `200`, `200` |
 | Error handling | invalid id, missing fields, malformed JSON, missing student, unknown route | `400`, `400`, `400`, `404`, `404` |
 
-![A new record created through the page, with the 201 response](docs/screenshots/ui-201.png)
-
----
-
-## The demo page
-
-The page at `/` is a thin vanilla HTML/CSS/JS client over the same five endpoints. It is not a replacement for Postman and it does not mock any data — every button issues a real request, and the request desk shows the actual status code and JSON response.
-
-It was built to make the in-class demo easy to read:
-
-- The register shows the current array.
-- Add / edit / delete go through `POST`, `PUT`, `DELETE`.
-- Clicking a row calls `GET /students/:id`.
-- The request desk can send any of the five routes, plus deliberate `400` and `404` cases.
-- The endpoint checklist ticks each route after its first successful call.
-
-![The server rejecting an empty form with a 400](docs/screenshots/ui-400.png)
-
-![The request desk showing a 404 for an unknown id](docs/screenshots/ui-404.png)
-
-![All five endpoints checked off after the demo run](docs/screenshots/ui-tested.png)
-
-The interface uses only system fonts and plain CSS. No React, no Tailwind, no icon library. It collapses to a single column on a phone; course and year move under the student's name so the row actions stay reachable. A 390 px capture is in [ui-mobile.png](docs/screenshots/ui-mobile.png).
-
 ---
 
 ## Verification
 
-Checked by hand with `curl` and through the page:
+Checked by hand with `curl`:
 
 | Check | Result |
 | --- | --- |
-| `GET /students` | `200`, returns 5 records |
-| `GET /students/101` | `200` |
+| `GET /` | `200 Student Management REST API is Running` |
+| `GET /students` | `200`, returns 3 records |
+| `GET /students/1` | `200` |
 | `GET /students/abc` | `400 Invalid student id` |
 | `GET /students/9999` | `404 Student not found` |
 | `POST /students` valid body | `201`, new id assigned |
-| `POST /students` empty body | `400`, field details |
-| `PUT /students/106` valid body | `200`, same id, updated fields |
+| `POST /students` empty body | `400` |
+| `PUT /students/4` valid body | `200`, same id, updated fields |
 | `PUT /students/9999` | `404` |
-| `DELETE /students/106` | `200`, record returned |
-| `DELETE /students/106` again | `404` |
+| `DELETE /students/4` | `200`, record returned |
+| `DELETE /students/4` again | `404` |
 | Malformed JSON body | `400 Invalid JSON body` |
 | Unknown route | `404 Route not found` |
 
@@ -328,8 +334,8 @@ Checked by hand with `curl` and through the page:
 
 ## Notes
 
-- Data is intentionally in memory. This follows the assignment restriction and means the five seed students return after every server restart.
-- The `public/` folder and the Postman collection are additions around the required server; the required Express API itself uses only `app.js`, `routes/`, `middleware/` and `data/`.
-- No authentication, database, or persistence layer is included because none was requested.
+- Data is intentionally in memory. This follows the assignment restriction and means the three seed students return after every server restart.
+- The Postman collection and this README are additions around the required server; the required Express API itself uses only `app.js`, `routes/`, `middleware/` and `data/`.
+- No authentication, database, UI, or persistence layer is included because none was requested.
 
 Built by **Agrima Mishra** for Web Dev III, Unit 2.

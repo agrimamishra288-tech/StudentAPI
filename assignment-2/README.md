@@ -1,9 +1,11 @@
-# Campus Registry REST API
+# Student Management API
 
-**Web Dev III / Unit 2 / Lab Assignment 2 — Student Management**<br>
+**Web Dev III / Unit 2 / Lab Assignment 2**<br>
 Node.js + Express.js + Postman · in-class lab · 2.5 marks
 
-A small Express server that keeps a campus student register in memory and exposes it over five REST endpoints. No database, no Mongoose, no extra libraries — just an array, a router, a custom logger and proper status codes.
+A small Express server that keeps a class register in memory and exposes it over five REST endpoints. No database, no Mongoose, no extra libraries — just an array, a router, a custom logger and proper status codes.
+
+The API uses a consistent response envelope with `success`, `message`, `count` for lists, and `data` for the record or records.
 
 ---
 
@@ -17,7 +19,7 @@ A small Express server that keeps a campus student register in memory and expose
 | Modular routing | `app.js` mounts `/students`; routes live in their own file |
 | Proper error handling | `200`, `201`, `400`, `404`, plus a `500` safety net |
 | Array and JSON data only | `data/students.js` |
-| Test the APIs in Postman | `postman/Campus_Registry_API.postman_collection.json` |
+| Test the APIs in Postman | `postman/Student_Management_API.postman_collection.json` |
 | Required project structure | `routes/`, `middleware/`, `data/`, `app.js` |
 
 **Restrictions respected:** no MongoDB, no MySQL, no Mongoose. Records are a plain JavaScript array and reset when the server restarts. Express is the only dependency.
@@ -36,7 +38,7 @@ assignment-2/
 ├─ data/
 │  └─ students.js          # three seed records (in-memory array)
 ├─ postman/
-│  └─ Campus_Registry_API.postman_collection.json
+│  └─ Student_Management_API.postman_collection.json
 ├─ package.json
 └─ README.md
 ```
@@ -54,7 +56,13 @@ npm start
 ```
 
 Server: [http://localhost:3000](http://localhost:3000)<br>
-Root route: `GET /` returns `Campus Registry API is running. Try GET /students.`
+Root route: `GET /` returns `Student Management API is running. Try GET /students.`
+
+If port `3000` is already in use, stop the other server or run:
+
+```bash
+PORT=3001 npm start
+```
 
 To reset the register, stop and restart the server. The three seed students come back.
 
@@ -91,14 +99,26 @@ Validation rules:
 - `name`, `course` and `email` must be non-empty strings.
 - `age` must be a whole number greater than 0.
 
-### Response shape
+### Response format
 
-Success with one student:
+**List success:**
 
 ```json
 {
+  "success": true,
+  "count": 0,
+  "message": "Student records retrieved.",
+  "data": []
+}
+```
+
+**Single-record success:**
+
+```json
+{
+  "success": true,
   "message": "Student record created.",
-  "student": {
+  "data": {
     "id": 4,
     "name": "Nisha Verma",
     "age": 20,
@@ -108,19 +128,11 @@ Success with one student:
 }
 ```
 
-Success with a list:
+**Failure:**
 
 ```json
 {
-  "message": "Student records retrieved.",
-  "students": []
-}
-```
-
-Failure:
-
-```json
-{
+  "success": false,
   "message": "No student exists with that id."
 }
 ```
@@ -133,8 +145,10 @@ Failure:
 
 ```json
 {
+  "success": true,
+  "count": 3,
   "message": "Student records retrieved.",
-  "students": [
+  "data": [
     {
       "id": 1,
       "name": "Aarav Mehta",
@@ -178,8 +192,9 @@ Content-Type: application/json
 
 ```json
 {
+  "success": true,
   "message": "Student record created.",
-  "student": {
+  "data": {
     "id": 4,
     "name": "Nisha Verma",
     "age": 20,
@@ -193,6 +208,7 @@ Content-Type: application/json
 
 ```json
 {
+  "success": false,
   "message": "Provide a name, age, course and email. Age must be a positive whole number."
 }
 ```
@@ -201,8 +217,9 @@ Content-Type: application/json
 
 ```json
 {
+  "success": true,
   "message": "Student record retrieved.",
-  "student": {
+  "data": {
     "id": 1,
     "name": "Aarav Mehta",
     "age": 20,
@@ -216,8 +233,9 @@ Content-Type: application/json
 
 ```json
 {
+  "success": true,
   "message": "Student record updated.",
-  "student": {
+  "data": {
     "id": 4,
     "name": "Nisha Verma",
     "age": 21,
@@ -231,8 +249,9 @@ Content-Type: application/json
 
 ```json
 {
+  "success": true,
   "message": "Student record deleted.",
-  "student": {
+  "data": {
     "id": 4,
     "name": "Nisha Verma",
     "age": 21,
@@ -246,6 +265,7 @@ Content-Type: application/json
 
 ```json
 {
+  "success": false,
   "message": "No student exists with that id."
 }
 ```
@@ -254,6 +274,7 @@ Content-Type: application/json
 
 ```json
 {
+  "success": false,
   "message": "Student id must be a positive whole number."
 }
 ```
@@ -276,7 +297,7 @@ app.use((err, req, res, next) => { /* 400 for bad JSON, 500 fallback */ });
 The logger prints the method, path, final status, duration, and the body of `POST`/`PUT` requests:
 
 ```text
-  CAMPUS REGISTRY API
+  STUDENT MANAGEMENT API
   Web Dev III - Unit 2 - Lab Assignment 2
   http://localhost:3000
   3 seed records in memory - no database
@@ -297,7 +318,7 @@ The logger prints the method, path, final status, duration, and the body of `POS
 ## Testing in Postman
 
 1. Start the server with `npm start`.
-2. In Postman: **Import** → choose `postman/Campus_Registry_API.postman_collection.json`.
+2. In Postman: **Import** → choose `postman/Student_Management_API.postman_collection.json`.
 3. Open **CRUD - run in order** and send the requests from top to bottom. The create request saves the new id in a collection variable, so read, update and delete all use the same record.
 4. Run **Error handling** to see the `400` and `404` responses.
 
@@ -316,8 +337,8 @@ Checked by hand with `curl`:
 
 | Check | Result |
 | --- | --- |
-| `GET /` | `200 Campus Registry API is running. Try GET /students.` |
-| `GET /students` | `200`, returns 3 records |
+| `GET /` | `200 Student Management API is running. Try GET /students.` |
+| `GET /students` | `200`, returns 3 records with `count` and `data` |
 | `GET /students/1` | `200` |
 | `GET /students/abc` | `400 Student id must be a positive whole number.` |
 | `GET /students/9999` | `404 No student exists with that id.` |

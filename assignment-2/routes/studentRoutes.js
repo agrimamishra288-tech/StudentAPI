@@ -12,7 +12,8 @@ const parseId = (rawId) => {
   return Number.isSafeInteger(id) && id > 0 ? id : null;
 };
 
-const fail = (res, status, message) => res.status(status).json({ message });
+const fail = (res, status, message) =>
+  res.status(status).json({ success: false, message });
 
 // Shared validation for POST and PUT.
 const isValidStudent = (payload) => {
@@ -30,8 +31,10 @@ const isValidStudent = (payload) => {
 // GET /students
 router.get("/", (req, res) => {
   res.status(200).json({
+    success: true,
+    count: students.length,
     message: "Student records retrieved.",
-    students: students
+    data: students
   });
 });
 
@@ -44,8 +47,9 @@ router.get("/:id", (req, res) => {
   if (!student) return fail(res, 404, "No student exists with that id.");
 
   res.status(200).json({
+    success: true,
     message: "Student record retrieved.",
-    student: student
+    data: student
   });
 });
 
@@ -61,8 +65,9 @@ router.post("/", (req, res) => {
   students.push(student);
 
   res.status(201).json({
+    success: true,
     message: "Student record created.",
-    student: student
+    data: student
   });
 });
 
@@ -85,8 +90,9 @@ router.put("/:id", (req, res) => {
   student.email = email;
 
   res.status(200).json({
+    success: true,
     message: "Student record updated.",
-    student: student
+    data: student
   });
 });
 
@@ -101,8 +107,9 @@ router.delete("/:id", (req, res) => {
   const [removed] = students.splice(index, 1);
 
   res.status(200).json({
+    success: true,
     message: "Student record deleted.",
-    student: removed
+    data: removed
   });
 });
 

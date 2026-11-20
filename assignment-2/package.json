@@ -1,0 +1,22 @@
+{
+  "name": "student-management-rest-api",
+  "version": "1.0.0",
+  "description": "Lab Assignment 2 - Student Management REST API built with Node.js and Express.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "rest-api",
+    "crud",
+    "middleware"
+  ],
+  "author": "Agrima Mishra",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

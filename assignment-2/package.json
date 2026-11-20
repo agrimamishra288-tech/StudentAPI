@@ -1,7 +1,7 @@
 {
-  "name": "student-management-rest-api",
+  "name": "campus-registry-api",
   "version": "1.0.0",
-  "description": "Lab Assignment 2 - Student Management REST API built with Node.js and Express.js",
+  "description": "Campus Registry REST API - Lab Assignment 2 built with Node.js and Express.js",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

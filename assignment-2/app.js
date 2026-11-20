@@ -14,7 +14,7 @@ app.use(express.json());
 
 // Home route
 app.get("/", (req, res) => {
-  res.status(200).send("Student Management API is running. Try GET /students.");
+  res.status(200).send("Campus Registry API is running. Try GET /students.");
 });
 
 // Modular routing: all student endpoints live in routes/studentRoutes.js
@@ -39,7 +39,7 @@ app.use((err, req, res, next) => {
 
 const server = app.listen(PORT, () => {
   console.log("");
-  console.log("  STUDENT MANAGEMENT REST API");
+  console.log("  CAMPUS REGISTRY API");
   console.log("  Web Dev III - Unit 2 - Lab Assignment 2");
   console.log(`  http://localhost:${PORT}`);
   console.log("  3 seed records in memory - no database");

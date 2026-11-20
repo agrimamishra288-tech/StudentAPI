@@ -1,9 +1,9 @@
-# Student Management REST API
+# Campus Registry REST API
 
-**Web Dev III / Unit 2 / Lab Assignment 2**<br>
+**Web Dev III / Unit 2 / Lab Assignment 2 — Student Management**<br>
 Node.js + Express.js + Postman · in-class lab · 2.5 marks
 
-A small Express server that keeps a class register in memory and exposes it over five REST endpoints. No database, no Mongoose, no extra libraries — just an array, a router, a custom logger and proper status codes.
+A small Express server that keeps a campus student register in memory and exposes it over five REST endpoints. No database, no Mongoose, no extra libraries — just an array, a router, a custom logger and proper status codes.
 
 ---
 
@@ -17,7 +17,7 @@ A small Express server that keeps a class register in memory and exposes it over
 | Modular routing | `app.js` mounts `/students`; routes live in their own file |
 | Proper error handling | `200`, `201`, `400`, `404`, plus a `500` safety net |
 | Array and JSON data only | `data/students.js` |
-| Test the APIs in Postman | `postman/Student_Management_API.postman_collection.json` |
+| Test the APIs in Postman | `postman/Campus_Registry_API.postman_collection.json` |
 | Required project structure | `routes/`, `middleware/`, `data/`, `app.js` |
 
 **Restrictions respected:** no MongoDB, no MySQL, no Mongoose. Records are a plain JavaScript array and reset when the server restarts. Express is the only dependency.
@@ -36,7 +36,7 @@ assignment-2/
 ├─ data/
 │  └─ students.js          # three seed records (in-memory array)
 ├─ postman/
-│  └─ Student_Management_API.postman_collection.json
+│  └─ Campus_Registry_API.postman_collection.json
 ├─ package.json
 └─ README.md
 ```
@@ -54,7 +54,7 @@ npm start
 ```
 
 Server: [http://localhost:3000](http://localhost:3000)<br>
-Root route: `GET /` returns `Student Management API is running. Try GET /students.`
+Root route: `GET /` returns `Campus Registry API is running. Try GET /students.`
 
 To reset the register, stop and restart the server. The three seed students come back.
 
@@ -276,7 +276,7 @@ app.use((err, req, res, next) => { /* 400 for bad JSON, 500 fallback */ });
 The logger prints the method, path, final status, duration, and the body of `POST`/`PUT` requests:
 
 ```text
-  STUDENT MANAGEMENT REST API
+  CAMPUS REGISTRY API
   Web Dev III - Unit 2 - Lab Assignment 2
   http://localhost:3000
   3 seed records in memory - no database
@@ -297,7 +297,7 @@ The logger prints the method, path, final status, duration, and the body of `POS
 ## Testing in Postman
 
 1. Start the server with `npm start`.
-2. In Postman: **Import** → choose `postman/Student_Management_API.postman_collection.json`.
+2. In Postman: **Import** → choose `postman/Campus_Registry_API.postman_collection.json`.
 3. Open **CRUD - run in order** and send the requests from top to bottom. The create request saves the new id in a collection variable, so read, update and delete all use the same record.
 4. Run **Error handling** to see the `400` and `404` responses.
 
@@ -316,7 +316,7 @@ Checked by hand with `curl`:
 
 | Check | Result |
 | --- | --- |
-| `GET /` | `200 Student Management API is running. Try GET /students.` |
+| `GET /` | `200 Campus Registry API is running. Try GET /students.` |
 | `GET /students` | `200`, returns 3 records |
 | `GET /students/1` | `200` |
 | `GET /students/abc` | `400 Student id must be a positive whole number.` |

@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "b7a1c0e2-4d3f-4a8e-9b6c-2f1d8a3e5c74",
-    "name": "Student Management REST API - Lab 2",
-    "description": "Lab Assignment 2 - Web Dev III, Unit 2.\n\nRun the \"CRUD - run in order\" folder top to bottom. The create request stores the new id in a collection variable so the read, update and delete requests use the same record. The \"Error handling\" folder checks every 400 and 404 case.\n\nBase URL: http://localhost:3000\nNo database is used; restarting the server restores the three seed students.",
+    "name": "Campus Registry API - Lab 2",
+    "description": "Campus Registry API - Lab Assignment 2, Web Dev III, Unit 2.\n\nRun the \"CRUD - run in order\" folder top to bottom. The create request stores the new id in a collection variable so the read, update and delete requests use the same record. The \"Error handling\" folder checks every 400 and 404 case.\n\nBase URL: http://localhost:3000\nNo database is used; restarting the server restores the three seed students.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

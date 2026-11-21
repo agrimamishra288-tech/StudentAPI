@@ -29,7 +29,7 @@ The API uses a consistent response envelope with `success`, `message`, `count` f
 ## Project structure
 
 ```text
-assignment-2/
+StudentAPI/
 ├─ app.js                  # server, middleware order, 404 + error handler
 ├─ routes/
 │  └─ studentRoutes.js     # all five student endpoints
@@ -50,7 +50,7 @@ The four files required by the assignment are present with the exact names: `app
 ## Run it
 
 ```bash
-cd assignment-2
+cd StudentAPI
 npm install
 npm start
 ```
